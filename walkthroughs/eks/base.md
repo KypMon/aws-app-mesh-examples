@@ -40,7 +40,7 @@ export KUBECONFIG=~/.kube/eksctl/clusters/appmeshtest
 
 ## Install App Mesh  Kubernetes components
 
-In order to automatically inject App Mesh components and proxies on pod creation we need to create some custom resources on the clusters. We will use *helm* for that. We need install tiller on both the clusters and run the following commands on both clusters for that.
+In order to automatically inject App Mesh components and proxies on pod creation we need to create some custom resources on the clusters. We will use *helm* for that.
 
 *Code base*
 
@@ -56,17 +56,6 @@ Clone the repo and cd into the appropriate directory. We will be running all com
 >>brew install kubernetes-helm
 ```
 
-*Install tiller*
-
-Run the following series of commands in order
-```
-kubectl create -f helm/tiller-rbac.yml --record --save-config
-helm init --service-account tiller
-kubectl -n kube-system rollout status deploy tiller-deploy
-
-Note: The last command will tell you if the rollout is finished
-```
-
 *Install App Mesh Components*
 
 Run the following set of commands to install the App Mesh controller and Injector components 
@@ -76,7 +65,7 @@ helm repo add eks https://aws.github.io/eks-charts
 kubectl create ns appmesh-system
 kubectl apply -f https://raw.githubusercontent.com/aws/eks-charts/master/stable/appmesh-controller/crds/crds.yaml
 helm upgrade -i appmesh-controller eks/appmesh-controller --namespace appmesh-system
-helm upgrade -i appmesh-inject eks/appmesh-inject --namespace appmesh-system --set mesh.create=true --set mesh.name=global
+helm upgrade -i appmesh-inject eks/appmesh-inject --namespace appmesh-system --set mesh.create=true --set mesh.name=color-mesh
 
 Opitionally add tracing
 helm upgrade -i appmesh-inject eks/appmesh-inject --namespace appmesh-system --set tracing.enabled=true --set tracing.provider=x-ray
